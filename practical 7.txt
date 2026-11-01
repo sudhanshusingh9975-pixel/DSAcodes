@@ -1,0 +1,57 @@
+names = [
+    "Admin Block",
+    "Library",
+    "Computer Dept",
+    "Electronics Dept",
+    "Mechanical Dept",
+    "Civil Dept",
+    "Management Inst"
+]
+
+n = len(names)
+
+graph = [
+    [0, 100, 200, 0, 0, 0, 150],
+    [100, 0, 120, 180, 0, 0, 0],
+    [200, 120, 0, 90, 250, 0, 0],
+    [0, 180, 90, 0, 140, 210, 0],
+    [0, 0, 250, 140, 0, 100, 300],
+    [0, 0, 0, 210, 100, 0, 170],
+    [150, 0, 0, 0, 300, 170, 0]
+]
+
+# Prim's algorithm
+visited = [False] * n
+visited[0] = True
+
+mst = []
+total = 0
+
+for _ in range(n - 1):
+    best = 999999
+    best_u = -1
+    best_v = -1
+
+    for u in range(n):
+        if visited[u]:
+            for v in range(n):
+                if not visited[v] and graph[u][v] != 0:
+                    if graph[u][v] < best:
+                        best = graph[u][v]
+                        best_u = u
+                        best_v = v
+
+    visited[best_v] = True
+    mst.append((best_u, best_v, best))
+    total += best
+
+print("Adjacency Matrix:")
+for row in graph:
+    print(row)
+
+print("\nMinimum Spanning Tree using Prim's algorithm:")
+
+for u, v, d in mst:
+    print(names[u] + " --- " + names[v] + " : " + str(d) + " m")
+
+print("Total distance =", total, "m")

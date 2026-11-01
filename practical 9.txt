@@ -1,0 +1,47 @@
+# Quick Sort - Orders by delivery time
+
+def quick_sort_orders(orders):
+    if len(orders) <= 1:
+        return orders
+
+    pivot = orders[0]
+
+    left = [x for x in orders[1:] if x[1] < pivot[1]]
+    right = [x for x in orders[1:] if x[1] >= pivot[1]]
+
+    return quick_sort_orders(left) + [pivot] + quick_sort_orders(right)
+
+
+# Input orders
+orders = []
+
+n = int(input("Enter number of orders: "))
+
+for i in range(n):
+    print("\nOrder", i + 1)
+    order_id = input("Enter Order ID: ")
+    delivery_time = int(input("Enter delivery time in minutes: "))
+
+    orders.append((order_id, delivery_time))
+
+
+# Display before sorting
+print("\nOrders before sorting:")
+print("Order ID\tDelivery Time (minutes)")
+print("----------------------------------")
+
+for order in orders:
+    print(order[0], "\t\t", order[1])
+
+
+# Perform Quick Sort
+sorted_orders = quick_sort_orders(orders)
+
+
+# Display after sorting
+print("\nOrders after sorting (Quickest delivery first):")
+print("Order ID\tDelivery Time (minutes)")
+print("----------------------------------")
+
+for order in sorted_orders:
+    print(order[0], "\t\t", order[1])
