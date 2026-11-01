@@ -1,47 +1,60 @@
-# Quick Sort - Orders by delivery time
+# Program to Sort Online Orders using Merge Sort
 
-def quick_sort_orders(orders):
+# Function to merge two sorted lists
+def merge(left, right):
+
+    result = []
+    i = 0
+    j = 0
+
+    while i < len(left) and j < len(right):
+
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+
+    # Add remaining elements
+    result.extend(left[i:])
+    result.extend(right[j:])
+
+    return result
+
+
+# Merge Sort Function
+def merge_sort(orders):
+
     if len(orders) <= 1:
         return orders
 
-    pivot = orders[0]
+    # Divide the list into two halves
+    mid = len(orders) // 2
 
-    left = [x for x in orders[1:] if x[1] < pivot[1]]
-    right = [x for x in orders[1:] if x[1] >= pivot[1]]
+    left = merge_sort(orders[:mid])
+    right = merge_sort(orders[mid:])
 
-    return quick_sort_orders(left) + [pivot] + quick_sort_orders(right)
-
-
-# Input orders
-orders = []
-
-n = int(input("Enter number of orders: "))
-
-for i in range(n):
-    print("\nOrder", i + 1)
-    order_id = input("Enter Order ID: ")
-    delivery_time = int(input("Enter delivery time in minutes: "))
-
-    orders.append((order_id, delivery_time))
+    # Merge the sorted halves
+    return merge(left, right)
 
 
-# Display before sorting
-print("\nOrders before sorting:")
-print("Order ID\tDelivery Time (minutes)")
-print("----------------------------------")
+# Main Program
+print("ONLINE ORDER DELIVERY SYSTEM")
 
-for order in orders:
-    print(order[0], "\t\t", order[1])
+# Delivery times in minutes
+orders = [45, 20, 60, 15, 35, 10, 50]
 
+print("\nOriginal Delivery Times:")
+print(orders)
 
-# Perform Quick Sort
-sorted_orders = quick_sort_orders(orders)
+# Sort orders using Merge Sort
+sorted_orders = merge_sort(orders)
 
+print("\nSorted Delivery Times (Fastest First):")
+print(sorted_orders)
 
-# Display after sorting
-print("\nOrders after sorting (Quickest delivery first):")
-print("Order ID\tDelivery Time (minutes)")
-print("----------------------------------")
+print("\nOrder Priority:")
 
-for order in sorted_orders:
-    print(order[0], "\t\t", order[1])
+for i in range(len(sorted_orders)):
+    print("Order", i + 1, ":", sorted_orders[i], "minutes")
