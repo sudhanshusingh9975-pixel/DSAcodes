@@ -1,119 +1,157 @@
 #include <iostream>
+#include <cstdlib>
+#include <cstring>
 using namespace std;
+
+struct Student
+{
+    int id;
+    char name[50];
+    float cgpa;
+};
+
+// Linear Search
+int linearSearch(Student *s, int n, int key)
+{
+    for (int i = 0; i < n; i++)
+    {
+        if (s[i].id == key)
+            return i;
+    }
+    return -1;
+}
+
+// Binary Search
+int binarySearch(Student *s, int n, int key)
+{
+    int low = 0, high = n - 1;
+
+    while (low <= high)
+    {
+        int mid = (low + high) / 2;
+
+        if (s[mid].id == key)
+            return mid;
+        else if (s[mid].id < key)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    return -1;
+}
 
 int main()
 {
-    int n, key, choice;
-
-    cout << "Enter number of elements: ";
-    cin >> n;
-
-    int arr[100];
-
-    cout << "Enter array elements: ";
-    for(int i = 0; i < n; i++)
-    {
-        cin >> arr[i];
-    }
+    Student *s = NULL;
+    int n = 0, choice, key;
 
     do
     {
-        cout << "\n----- SEARCHING MENU -----";
-        cout << "\n1. Linear Search";
-        cout << "\n2. Binary Search";
-        cout << "\n0. Exit";
-
-        cout << "\nEnter your choice: ";
+        cout << "\n1. Add Student";
+        cout << "\n2. Display Students";
+        cout << "\n3. Linear Search";
+        cout << "\n4. Binary Search";
+        cout << "\n5. Exit";
+        cout << "\nEnter choice: ";
         cin >> choice;
 
-        switch(choice)
+        switch (choice)
         {
-            case 1:
+        case 1:
+        {
+            Student *temp = (Student *)realloc(
+                s, (n + 1) * sizeof(Student));
+
+            if (temp == NULL)
             {
-                cout << "Enter element to search: ";
-                cin >> key;
-
-                int found = 0;
-
-                for(int i = 0; i < n; i++)
-                {
-                    if(arr[i] == key)
-                    {
-                        cout << "Element found at position "
-                             << i + 1 << endl;
-                        found = 1;
-                        break;
-                    }
-                }
-
-                if(found == 0)
-                    cout << "Element not found!" << endl;
-
+                cout << "Memory allocation failed!";
                 break;
             }
 
-            case 2:
-            {
-                // Sort array in ascending order
-                for(int i = 0; i < n - 1; i++)
-                {
-                    for(int j = 0; j < n - i - 1; j++)
-                    {
-                        if(arr[j] > arr[j + 1])
-                        {
-                            int temp = arr[j];
-                            arr[j] = arr[j + 1];
-                            arr[j + 1] = temp;
-                        }
-                    }
-                }
+            s = temp;
 
-                cout << "Sorted array: ";
-                for(int i = 0; i < n; i++)
-                    cout << arr[i] << " ";
+            cout << "Enter Student ID: ";
+            cin >> s[n].id;
 
-                cout << "\nEnter element to search: ";
-                cin >> key;
+            cout << "Enter Name: ";
+            cin >> s[n].name;
 
-                int low = 0, high = n - 1;
-                int found = 0;
+            cout << "Enter CGPA: ";
+            cin >> s[n].cgpa;
 
-                while(low <= high)
-                {
-                    int mid = (low + high) / 2;
-
-                    if(arr[mid] == key)
-                    {
-                        cout << "Element found at position "
-                             << mid + 1 << endl;
-                        found = 1;
-                        break;
-                    }
-                    else if(key < arr[mid])
-                    {
-                        high = mid - 1;
-                    }
-                    else
-                    {
-                        low = mid + 1;
-                    }
-                }
-
-                if(found == 0)
-                    cout << "Element not found!" << endl;
-
-                break;
-            }
-
-            case 0:
-                cout << "Program terminated.";
-                break;
-
-            default:
-                cout << "Invalid choice!";
+            n++;
+            cout << "Student added successfully!";
+            break;
         }
 
-    } while(choice != 0);
+        case 2:
+            cout << "\nID\tName\tCGPA\n";
+            for (int i = 0; i < n; i++)
+            {
+                cout << s[i].id << "\t"
+                     << s[i].name << "\t"
+                     << s[i].cgpa << endl;
+            }
+            break;
+
+        case 3:
+            cout << "Enter ID to search: ";
+            cin >> key;
+
+            {
+                int pos = linearSearch(s, n, key);
+
+                if (pos != -1)
+                    cout << "Student Found: "
+                         << s[pos].name << " "
+                         << s[pos].cgpa;
+                else
+                    cout << "Student Not Found";
+            }
+            break;
+
+        case 4:
+            // Sort students by ID before binary search
+            for (int i = 0; i < n - 1; i++)
+            {
+                for (int j = 0; j < n - i - 1; j++)
+                {
+                    if (s[j].id > s[j + 1].id)
+                    {
+                        Student t = s[j];
+                        s[j] = s[j + 1];
+                        s[j + 1] = t;
+                    }
+                }
+            }
+
+            cout << "Enter ID to search: ";
+            cin >> key;
+
+            {
+                int pos = binarySearch(s, n, key);
+
+                if (pos != -1)
+                    cout << "Student Found: "
+                         << s[pos].name << " "
+                         << s[pos].cgpa;
+                else
+                    cout << "Student Not Found";
+            }
+            break;
+
+        case 5:
+            cout << "Exiting Program...";
+            break;
+
+        default:
+            cout << "Invalid Choice!";
+        }
+
+    } while (choice != 5);
+
+    free(s);
 
     return 0;
 }
+ha code copy paste kr
